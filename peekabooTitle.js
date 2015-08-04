@@ -6,9 +6,13 @@ var peekaboo = function(options){
         var originalTitle = new title(document.title);
         var visibilityState = true;
         
-        var defaultDelay = 2000;
-        var includeOriginal = false;
-        var initialDelay = 2000;
+        //default options
+        var options = {
+            defaultDelay: 2000,
+            initialDelay: 2000,
+            includeOriginal : false,
+            welcomeBack: []
+        };
         
         function title(text, delay){
             this.text = text;
@@ -47,7 +51,7 @@ var peekaboo = function(options){
         this.includeOriginal = function(state, delay){
             if (state){
                 originalTitle.delay = delay;
-                if (!includeOriginal) //only add to our titles if not previously added
+                if (!options.includeOriginal) //only add to our titles if not previously added
                     titles.push(originalTitle);
             } else{
                 var originalIndex = titles.indexOf(originalTitle);
@@ -55,18 +59,39 @@ var peekaboo = function(options){
                     titles.splice(originalIndex, 1);
             }
             
-            includeOriginal = state;
+            options.includeOriginal = state;
         };
         
         
         //set the global variable peekaboo to have our public functions of this once instance
-        //is there an easier way to do this...? maybe a for loop
-        peekaboo.titles = this.titles;
-        peekaboo.addTitle = this.addTitle;
-        peekaboo.clear = this.clear;
-        peekaboo.includeOriginal = this.includeOriginal;
+        for (publicFun in this){
+            if (!publicFun.startsWith('_'))
+                peekaboo[publicFun] = this[publicFun];
+        }
         
              
+        //private functions
+        this._setOptions = function(newOptions){
+            newOptions = newOptions || {};
+            
+            //fill in the options variables with newOptions and default options
+            for (option in newOptions)
+                this._setOption(option, newOptions[option]);
+        };
+        
+        this._setOption = function(newOptionName, state){
+            
+            //filter specific results if they need additional maintenences
+            if (newOptionName === "titles")
+                this.titles(state);
+            else if (newOptionName === "includeOriginal")
+                this.includeOriginal.apply(null, state);
+            else if (options.hasOwnProperty(newOptionName))
+                options[newOptionName] = state;
+            else
+                console.warn("Unknown option name %s", newOptionName);
+        };
+                 
         //listener functions
         var onBlurListener = function(){
             
@@ -81,7 +106,7 @@ var peekaboo = function(options){
                     var nextTitle = function(){ 
                         if (!visibilityState){
                             document.title = titles[count].text;
-                            setTimeout(nextTitle, titles[count].delay || defaultDelay);
+                            setTimeout(nextTitle, titles[count].delay || options.defaultDelay);
                             count = ++count % titles.length;
                         }
                     };
@@ -90,18 +115,24 @@ var peekaboo = function(options){
                 }
             };
             
-            if (initialDelay)
-                setTimeout(changeTitles, initialDelay);
+            if (options.initialDelay)
+                setTimeout(changeTitles, options.initialDelay);
             else
                 changeTitles();
         };
         
         var onFocusListener = function(){
             visibilityState = true;
+            
+            //welcome back!
+            if (options.welcomeBack[0]){
+                document.title = options.welcomeBack[0];
+                setTimeout(function(){ document.title = originalTitle.text; }, options.welcomeBack[1] || options.defaultDelay);
+            }
             document.title = originalTitle.text;
         };
 
-
+            
         if(window.addEventListener) {
              window.addEventListener('focus', onFocusListener);
              window.addEventListener('blur', onBlurListener);
@@ -124,14 +155,11 @@ var peekaboo = function(options){
     if (!peekaboo.instance)
         peekaboo.instance = new peekabooInstance();
     
-    //manage options
-    if (options){
-        if (typeof options.titles != 'undefined') instance.titles(options.titles);
-        
-        if (typeof instance.includeOriginal !== 'undefined'){
-            options.includeOriginal instanceof Array ? instance.includeOriginal.apply(null, options.includeOriginal) : instance.includeOriginal.call(options.includeOriginal);
-            instance.includeOriginal(options.includeOriginal); 
-        }
-    }
+    //options
+    //if person is only setting one option...
+    if (typeof options === 'string')
+        peekaboo.instance._setOption(options, arguments[1]);
+    else if (typeof options === "object")
+        peekaboo.instance._setOptions(options);
 
 };
