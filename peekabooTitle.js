@@ -2,63 +2,74 @@ var peekaboo = function(options){
     
     function peekabooInstance(){
         
-        var titles = new Array();
-        var originalTitle = new title(document.title);
+        var originalTitle = {text: document.title, delay: 2000}; //makeshift because our helper hasn't been defined yet
         var visibilityState = true;
         var startTime; 
         
         //default options
         var options = {
+            titles: new Array(),
             defaultDelay: 2000,
             initialDelay: 2000,
             includeOriginal : false,
-            welcomeBack: [],
-            timeout: 60
+            welcomeBack: null,
+            goodBye: null,
+            prefix: "",
+            timeout: 60,
+            mode: "random",
+            loop: 0
         };
         
-        function title(text, delay){
-            this.text = text;
-            this.delay = delay;
+        //helper function... this is so we can pass using function.prototype.apply
+        var makeTitle = function(text, delay){
+            function title(text, delay){
+                this.text = text;
+                this.delay = delay;
+            };
+            return new title(text, delay);
+        };
+        
+        
+        var setTitle = function(title, callback){
+            document.title = options.prefix + title.text;
+            setTimeout(callback, title.delay || options.defaultDelay);
         };
         
         //public methods
-        this.titles = function(newTitles){
-            if (newTitles instanceof Array){
-                titles = new Array();
-                for (newTitle of newTitles){
-                    if (newTitle instanceof Array)
-                        this.addTitle(newTitle[0], newTitle[1]);
-                    else if(typeof newTitle === 'string')
-                        this.addTitle(newTitle)
-                    else{
-                        console.warn("Unknown parameter in peekaboo.titles.");
-                        console.warn(newTitle);
-                    }
-
-                }
-            }
-            return titles;
-        };
+        this.titles = function(){ return options.titles; };
         
-        this.addTitle = function(newTitle, delay){
-            if (typeof newTitle === 'string')
-                titles.push(new title(newTitle, delay));
+        this.addTitles = function(newTitle, delay){
+            for (var i = 0; i < arguments.length; i++){
+                 if (typeof arguments[i] === 'string'){
+                     if (typeof arguments[i + 1] === "number")
+                         options.titles.push(makeTitle(arguments[i], arguments[i + 1]));
+                     else
+                         options.titles.push(makeTitle(arguments[i]));
+                 }
+             }
         };
         
         this.clear = function(){
-            titles = new Array();
-            onFocusListener();
+            options.titles = new Array();
         };
         
-        this.includeOriginal = function(state, delay){
+        this.stop = function(){
+            onFocusHandler();
+        };
+        
+        this.start = function(){ 
+            onBlurHandler();
+        };
+        
+        this._includeOriginal = function(state, delay){
             if (state){
                 originalTitle.delay = delay;
                 if (!options.includeOriginal) //only add to our titles if not previously added
-                    titles.push(originalTitle);
+                    options.titles.push(originalTitle);
             } else{
                 var originalIndex = titles.indexOf(originalTitle);
                 if (originalIndex > -1)
-                    titles.splice(originalIndex, 1);
+                    options.titles.splice(originalIndex, 1);
             }
             
             options.includeOriginal = state;
@@ -85,11 +96,11 @@ var peekaboo = function(options){
             
             //filter specific results if they need additional maintenences
             if (newOptionName === "titles")
-                this.titles(state);
+                this.addTitles.apply(null, state);
             else if (newOptionName === "includeOriginal")
-                this.includeOriginal.apply(null, state);
-            else if (newOptionName === "welcomeBack")
-                typeof state === "string" ? options.welcomeBack = new title(state) : options.welcomeBack = new title(state[0], state[1]);
+                typeof state === "string" ? this._includeOriginal(state) : this._includeOriginal.apply(null, state);
+            else if (newOptionName === "welcomeBack" || newOptionName === "goodBye")
+                options[newOptionName] = typeof state === "string" ? makeTitle(state) : makeTitle.apply(null, state);
             else if (options.hasOwnProperty(newOptionName))
                 options[newOptionName] = state;
             else
@@ -97,30 +108,52 @@ var peekaboo = function(options){
         };
                  
         //listener functions
-        var onBlurListener = function(){
+        var onBlurHandler = function(){
             
             visibilityState = false;
             startTime = Date.now()/1000;
+            var innerCount = 0; 
+            var outerCount = 0;
             
-            var changeTitles = function(){ 
-                if (titles.length === 1){
-                    document.title = titles[0].text;
-                }
-                else if (titles.length > 1){
-                    var count = 0; 
-                    var nextTitle = function(){ 
-                        if (!visibilityState){
-                            document.title = titles[count].text;
-                            setTimeout(nextTitle, titles[count].delay || options.defaultDelay);
-                            count = ++count % titles.length;
-                        }
-                        
-                        if (Date.now()/1000 - startTime > options.timeout)
-                            onFocusListener();
-                    };
+            var changeTitles = function(){
+                if (options.titles.length > 0 && !visibilityState){
                     
-                    nextTitle();
-                }
+                    //check the timeout
+                    if (options.timeout && Date.now()/1000 - startTime > options.timeout){
+                        if (options.goodBye)
+                            setTitle(options.goodBye, function(){ setTitle(originalTitle); });
+                        else
+                            setTitle(originalTitle);
+                    } else {
+                        
+                        
+                        if (options.mode === "random"){
+                            setTitle(options.titles[Math.floor(Math.random() * options.titles.length)], changeTitles);
+
+                        } else if (options.mode === "ordered"){
+
+                            if (options.loop){
+                                if (outerCount < options.loop)
+                                    setTitle(options.titles[innerCount], changeTitles);
+                                else{
+                                    if (options.goodBye)
+                                        setTitle(options.goodBye, function(){ setTitle(originalTitle); });
+                                    else
+                                        setTitle(originalTitle);
+                                }
+                                    
+
+                            } else 
+                                setTitle(options.titles[innerCount], changeTitles);
+
+
+                            innerCount = ++innerCount % options.titles.length;
+                            if (innerCount === 0) outerCount++;
+                            
+                            
+                        }
+                    }
+                }           
             };
             
             if (options.initialDelay)
@@ -129,44 +162,48 @@ var peekaboo = function(options){
                 changeTitles();
         };
         
-        var onFocusListener = function(){
-            visibilityState = true;
+        var onFocusHandler = function(){
             
-            //welcome back!
-            if (options.welcomeBack){
-                document.title = options.welcomeBack.text;
-                setTimeout(function(){ document.title = originalTitle.text; }, options.welcomeBack.delay || options.defaultDelay);
+            //this fixes the first time the page is loaded
+            if (!visibilityState){
+                if (options.welcomeBack)
+                    setTitle(options.welcomeBack, function(){ setTitle(originalTitle); });
+                else
+                    setTitle(originalTitle);
             }
-            document.title = originalTitle.text;
+
+            visibilityState = true;
         };
 
             
+        //add our handlers to the focus and blur event listeners
         if(window.addEventListener) {
-             window.addEventListener('focus', onFocusListener);
-             window.addEventListener('blur', onBlurListener);
+             window.addEventListener('focus', onFocusHandler);
+             window.addEventListener('blur', onBlurHandler);
          }
          /* Detect if the browser supports `attachEvent`
            Only Internet Explorer browsers support that. */
          else if(window.attachEvent) {
-             window.attachEvent('onfocus', onFocusListener);
-             window.attachEvent('onblur', onBlurListener);
+             window.attachEvent('onfocus', onFocusHandler);
+             window.attachEvent('onblur', onBlurHandler);
          }
          /* If neither event handler function exists, then overwrite 
          the built-in event handers. With this technique any previous event
          handlers are lost. */
          else {
-             window.onfocus = onFocusListener;
-             window.onblur = onBlurListener;
+             window.onfocus = onFocusHandler;
+             window.onblur = onBlurHandler;
          }
     };
     
+    //create peekaboo if we haven't already (singleton)
     if (!peekaboo.instance)
         peekaboo.instance = new peekabooInstance();
     
     //options
     //if person is only setting one option...
     if (typeof options === 'string')
-        peekaboo.instance._setOption(options, arguments[1]);
+        peekaboo.instance._setOption(options, Array.prototype.slice.call(arguments, 1));
     else if (typeof options === "object")
         peekaboo.instance._setOptions(options);
 

@@ -5,10 +5,14 @@
     <script src="./peekabooTitle.js"></script>
     <script type="text/javascript">
         
-        peekaboo({titles: ["Where are you going?", "Are you running away?", ["Come back!", 500]],
+        peekaboo({titles: ["Where are you going?", "Are you running away?", "Come back!", 500],
                                                initialDelay: 0,
                                                welcomeBack: ["Welcome back!", 1000],
-                                                timeout: 20
+                                                timeout: 20,
+                                                mode: 'ordered',
+                                                loop: 2,
+                                                goodBye: ["go away", 4000],
+                                                prefix: "Love-"
                                               });
     </script>
 </head>
