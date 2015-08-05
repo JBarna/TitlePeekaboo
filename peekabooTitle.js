@@ -5,13 +5,15 @@ var peekaboo = function(options){
         var titles = new Array();
         var originalTitle = new title(document.title);
         var visibilityState = true;
+        var startTime; 
         
         //default options
         var options = {
             defaultDelay: 2000,
             initialDelay: 2000,
             includeOriginal : false,
-            welcomeBack: []
+            welcomeBack: [],
+            timeout: 60
         };
         
         function title(text, delay){
@@ -86,6 +88,8 @@ var peekaboo = function(options){
                 this.titles(state);
             else if (newOptionName === "includeOriginal")
                 this.includeOriginal.apply(null, state);
+            else if (newOptionName === "welcomeBack")
+                typeof state === "string" ? options.welcomeBack = new title(state) : options.welcomeBack = new title(state[0], state[1]);
             else if (options.hasOwnProperty(newOptionName))
                 options[newOptionName] = state;
             else
@@ -96,6 +100,7 @@ var peekaboo = function(options){
         var onBlurListener = function(){
             
             visibilityState = false;
+            startTime = Date.now()/1000;
             
             var changeTitles = function(){ 
                 if (titles.length === 1){
@@ -109,6 +114,9 @@ var peekaboo = function(options){
                             setTimeout(nextTitle, titles[count].delay || options.defaultDelay);
                             count = ++count % titles.length;
                         }
+                        
+                        if (Date.now()/1000 - startTime > options.timeout)
+                            onFocusListener();
                     };
                     
                     nextTitle();
@@ -125,9 +133,9 @@ var peekaboo = function(options){
             visibilityState = true;
             
             //welcome back!
-            if (options.welcomeBack[0]){
-                document.title = options.welcomeBack[0];
-                setTimeout(function(){ document.title = originalTitle.text; }, options.welcomeBack[1] || options.defaultDelay);
+            if (options.welcomeBack){
+                document.title = options.welcomeBack.text;
+                setTimeout(function(){ document.title = originalTitle.text; }, options.welcomeBack.delay || options.defaultDelay);
             }
             document.title = originalTitle.text;
         };
