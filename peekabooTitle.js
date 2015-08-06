@@ -17,7 +17,7 @@ var peekaboo = function(options){
             prefix: "",
             timeout: 60,
             mode: "random",
-            loop: 0
+            loopMax: 0
         };
         
         //helper function... this is so we can pass using function.prototype.apply
@@ -95,9 +95,10 @@ var peekaboo = function(options){
         this._setOption = function(newOptionName, state){
             
             //filter specific results if they need additional maintenences
-            if (newOptionName === "titles")
+            if (newOptionName === "titles"){
+                this.clear();
                 this.addTitles.apply(null, state);
-            else if (newOptionName === "includeOriginal")
+            } else if (newOptionName === "includeOriginal")
                 typeof state === "string" ? this._includeOriginal(state) : this._includeOriginal.apply(null, state);
             else if (newOptionName === "welcomeBack" || newOptionName === "goodBye")
                 options[newOptionName] = typeof state === "string" ? makeTitle(state) : makeTitle.apply(null, state);
@@ -132,8 +133,8 @@ var peekaboo = function(options){
 
                         } else if (options.mode === "ordered"){
 
-                            if (options.loop){
-                                if (outerCount < options.loop)
+                            if (options.loopMax){
+                                if (outerCount < options.loopMax)
                                     setTitle(options.titles[innerCount], changeTitles);
                                 else{
                                     if (options.goodBye)
