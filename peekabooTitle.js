@@ -31,7 +31,7 @@ var peekaboo = function(options){
         
         
         var setTitle = function(title, callback){
-            document.title = options.prefix + title.text;
+            document.title = title == originalTitle ? title.text : options.prefix + title.text;
             setTimeout(callback, title.delay || options.defaultDelay);
         };
         
