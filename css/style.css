@@ -1,1 +1,14 @@
-# Empty CSS file for your own CSS
+
+.editor { 
+    height: 250px;
+}
+
+
+#codeRow .col-md-4{
+    margin-bottom: 10px;
+}
+
+#codeRow .btn{
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+}

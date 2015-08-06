@@ -11,40 +11,31 @@ $(document).ready(function(){
         initialDelay: 1000
     });
     
+    var editors = [];
+    editors.push(ace.edit("editor-1"));
+    editors.push(ace.edit("editor-2"));
+    editors.push(ace.edit('editor-3'));
+    
+    for (editor of editors){
+        editor.setTheme("ace/theme/monokai");
+        editor.getSession().setMode("ace/mode/javascript");
+    }
+    
     $('.btn').click(function(){
         peekaboo.reset();
         
-        var id = $(this).attr('id');
+        var id = $(this).attr('id').split('-')[1] - 1;
         
-        if (id === "code-1"){
-            peekaboo({
-                titles: ["Where are you going?", 
-                        "Don't leave!", 2500,
-                        "Have fun w/o me :(", 4000],
-                defaultDelay: 3500,
-                initialDelay: 1000
-            });
-        } else if (id === "code-2"){
-            peekaboo({
-                titles: "New Message!",
-                mode: "ordered",
-                defaultDelay: 7500,
-                includeOriginal: true,
-                initialDelay: 1000,
-                prefix: "Peekaboo- "
-            });
-            
-            
-        } else if (id === "code-3"){
-            peekaboo('initialDelay', 1000);
-            peekaboo.addTitles("Video is paused", "Want to keep watching?", 2000);
-            
-        }
-        
-        if (!alertShown)
+        try{
+            eval(editors[id].getValue());
+            if (!alertShown)
             bootbox.alert("To see it work, go ahead and switch tabs!");
         
         alertShown = true;
+        } catch(e){
+            console.log(e);
+        }
+        
     });
     
 });
