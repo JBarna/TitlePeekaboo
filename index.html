@@ -20,7 +20,7 @@
     <div class="container-fluid">
 	<div class="row">
 		<div class="col-md-12">
-			<div class="jumbotron">
+			<div class="jumbotron text-center">
 				<h2>
 					Title Peekabo
 				</h2>
@@ -40,6 +40,7 @@
 				Run
 			</button>
             <pre><code class="language-javascript">
+            
         peekaboo({
             titles: ["Where are you going?", 
                     "Don't leave!", 2500,
@@ -47,6 +48,7 @@
             defaultDelay: 3500,
             initialDelay: 1000
         });
+        
             
         // Now open a new tab to see it work!
             </code></pre>
@@ -57,12 +59,14 @@
 				Run
 			</button>
             <pre><code class="language-javascript">
+            
         peekaboo({
             titles: "New Message!",
             mode: "ordered",
             defaultDelay: 7500,
             includeOriginal: true,
-            initialDelay: 1000
+            initialDelay: 1000,
+            prefix: "Peekaboo- "
         });
 
         // Now open a new tab to see it work!
@@ -75,6 +79,7 @@
 				Run
 			</button>
             <pre><code class="language-javascript">
+            
         peekaboo('initialDelay', 1000);
         peekaboo.addTitles("Video is paused", "Want to keep watching?", 2000);
 
@@ -82,8 +87,9 @@
 
 
 
+
+
         // Now open a new tab to see it work!
-        
             </code></pre>
 		</div>
 	</div>

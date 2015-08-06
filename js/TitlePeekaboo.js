@@ -2,12 +2,13 @@ var peekaboo = function(options){
     
     function peekabooInstance(){
         
+        var _this = this;
         var originalTitle = {text: document.title, delay: 5000}; //makeshift because our helper hasn't been defined yet
         var visibilityState = true;
         var startTime; 
         
         //default options
-        var options = {
+        var defaultOptions = {
             titles: new Array(),
             defaultDelay: 5000,
             initialDelay: 5000,
@@ -19,6 +20,8 @@ var peekaboo = function(options){
             mode: "random",
             loopMax: 0
         };
+        
+        var options= {};
         
         //helper function... this is so we can pass using function.prototype.apply
         var makeTitle = function(text, delay){
@@ -49,10 +52,14 @@ var peekaboo = function(options){
              }
         };
         
-        this.clear = function(){
+        this.clearTitles = function(){
             options.titles = new Array();
         };
         
+        this.reset = function(){
+            _this._setDefaults();
+        };
+            
         this.stop = function(){
             onFocusHandler();
         };
@@ -89,17 +96,17 @@ var peekaboo = function(options){
             
             //fill in the options variables with newOptions and default options
             for (option in newOptions)
-                this._setOption(option, newOptions[option]);
+                _this._setOption(option, newOptions[option]);
         };
         
         this._setOption = function(newOptionName, state){
             
             //filter specific results if they need additional maintenences
             if (newOptionName === "titles"){
-                this.clear();
-                typeof state === "string" ? this.addTitles(state) : this.addTitles.apply(null, state);
+                _this.clearTitles();
+                typeof state === "string" ? _this.addTitles(state) : _this.addTitles.apply(null, state);
             } else if (newOptionName === "includeOriginal")
-                typeof state === "boolean" ? this._includeOriginal(state) : this._includeOriginal.apply(null, state);
+                typeof state === "boolean" ? _this._includeOriginal(state) : _this._includeOriginal.apply(null, state);
             else if (newOptionName === "welcomeBack" || newOptionName === "goodBye")
                 options[newOptionName] = typeof state === "string" ? makeTitle(state) : makeTitle.apply(null, state);
             else if (options.hasOwnProperty(newOptionName))
@@ -107,6 +114,15 @@ var peekaboo = function(options){
             else
                 console.warn("Unknown option name %s", newOptionName);
         };
+        
+        this._setDefaults = function(){
+            for (option in defaultOptions){
+                options[option] = defaultOptions[option];
+            }
+        };
+        
+        //set the defaults now 
+        this._setDefaults();
                  
         //listener functions
         var onBlurHandler = function(){

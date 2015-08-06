@@ -66,7 +66,8 @@ While multiple arguments would have to be in an array for the JSON object, they 
 # Methods
 Methods are only availible after `peekaboo` has been initialized with `peekaboo([options])`;
 * **addTitles** -  A list of titles to add to the initial list. *Example:* `peekaboo.addTitles("First title", "Second Title", 1000);`
-* **clear** - Remove all previously added titles.
+* **clearTitles** - Remove all previously added titles.
+* **reset** - Remove all previously added options and stop `peekaboo`.
 * **start** - Simulates a user's focus leaving the page.
 * **stop** - Simulates a user's focus returning to the page.
 

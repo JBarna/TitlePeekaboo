@@ -12,7 +12,7 @@ $(document).ready(function(){
     });
     
     $('.btn').click(function(){
-        peekaboo.clear();
+        peekaboo.reset();
         
         var id = $(this).attr('id');
         
@@ -30,7 +30,8 @@ $(document).ready(function(){
                 mode: "ordered",
                 defaultDelay: 7500,
                 includeOriginal: true,
-                initialDelay: 1000
+                initialDelay: 1000,
+                prefix: "Peekaboo- "
             });
             
             
