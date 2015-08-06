@@ -1,6 +1,6 @@
-# [Title Peekaboo](http://jbarna.github.io/TitlePeekaboo/)
+# Title Peekaboo
 ---
-##### [Title Peekaboo](http://jbarna.github.io/TitlePeekaboo/) lets you grab the fading attention of users by playing a game of peek-a-boo through a webpage's title. 
+##### Title Peekaboo lets you grab the fading attention of users by playing a game of peek-a-boo through a webpage's title. 
 
 ## Why?
 
@@ -18,7 +18,7 @@
 * [License](#license)
 
 ### Example
-See a demonstration and example TitlePeekaboo at [http://jbarna.github.io/TitlePeekaboo/](http://jbarna.github.io/TitlePeekaboo/)
+See a demonstration and example of TitlePeekaboo at [http://jbarna.github.io/TitlePeekaboo/](http://jbarna.github.io/TitlePeekaboo/)
 
 ### Get Started
 Simply include TitlePeekaboo.js in your HTML and then initalize it:
