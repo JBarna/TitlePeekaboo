@@ -1,28 +1,99 @@
 <!DOCTYPE html>
-<html>
-<head> 
-    <title>Testing document</title>
-    <script src="./peekabooTitle.js"></script>
-    <script type="text/javascript">
-        
-        peekaboo({titles: ["Where are you going?", "Are you running away?", "Come back!", 500],
-                                               initialDelay: 0,
-                                               welcomeBack: ["Welcome back!", 1000],
-                                                timeout: 20,
-                                                mode: 'ordered',
-                                                loop: 2,
-                                                goodBye: ["go away", 4000],
-                                                prefix: "Love-"
-                                              });
-    </script>
-</head>
-<body>
-    <h1>
-        Hey
-    </h1>
-    <h2> 
-        This is a test
-    </h2>
-</body>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <title>Bootstrap 3, from LayoutIt!</title>
+
+    <meta name="description" content="Source code generated using layoutit.com">
+    <meta name="author" content="LayoutIt!">
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/prism.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+  </head>
+  <body>
+
+    <div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="jumbotron">
+				<h2>
+					Title Peekabo
+				</h2>
+				<h5>
+					<strong>Title Peekaboo lets you grab the fading attention of users by playing a game of peek-a-boo through a webpage's title.<br>See how it works by running the code snippets below!</strong>
+				</h5>
+				<p>
+					<a class="btn btn-primary btn-large" href="http://github.com/JBarna/TitlePeekaboo">See the project on GitHub</a>
+				</p>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+			 
+			<button id="code-1" type="button" class="btn btn-success btn-block">
+				Run
+			</button>
+            <pre><code class="language-javascript">
+        peekaboo({
+            titles: ["Where are you going?", 
+                    "Don't leave!", 2500,
+                    "Have fun w/o me :(", 4000],
+            defaultDelay: 3500,
+            initialDelay: 1000
+        });
+            
+        // Now open a new tab to see it work!
+            </code></pre>
+		</div>
+		<div class="col-md-4">
+			 
+			<button id="code-2" type="button" class="btn btn-success btn-block">
+				Run
+			</button>
+            <pre><code class="language-javascript">
+        peekaboo({
+            titles: "New Message!",
+            mode: "ordered",
+            defaultDelay: 7500,
+            includeOriginal: true,
+            initialDelay: 1000
+        });
+
+        // Now open a new tab to see it work!
+            </code></pre>
+            
+		</div>
+		<div class="col-md-4">
+			 
+			<button id="code-3" type="button" class="btn btn-success btn-block">
+				Run
+			</button>
+            <pre><code class="language-javascript">
+        peekaboo('initialDelay', 1000);
+        peekaboo.addTitles("Video is paused", "Want to keep watching?", 2000);
+
+
+
+
+
+        // Now open a new tab to see it work!
+        
+            </code></pre>
+		</div>
+	</div>
+</div>
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/prism.js"></script>
+    <script src="js/bootbox.js"></script>
+    <script src="js/TitlePeekaboo.js"></script>
+    <script src="js/scripts.js"></script>
+  </body>
 </html>

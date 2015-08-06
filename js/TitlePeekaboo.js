@@ -2,15 +2,15 @@ var peekaboo = function(options){
     
     function peekabooInstance(){
         
-        var originalTitle = {text: document.title, delay: 2000}; //makeshift because our helper hasn't been defined yet
+        var originalTitle = {text: document.title, delay: 5000}; //makeshift because our helper hasn't been defined yet
         var visibilityState = true;
         var startTime; 
         
         //default options
         var options = {
             titles: new Array(),
-            defaultDelay: 2000,
-            initialDelay: 2000,
+            defaultDelay: 5000,
+            initialDelay: 5000,
             includeOriginal : false,
             welcomeBack: null,
             goodBye: null,
@@ -38,7 +38,7 @@ var peekaboo = function(options){
         //public methods
         this.titles = function(){ return options.titles; };
         
-        this.addTitles = function(newTitle, delay){
+        this.addTitles = function(){
             for (var i = 0; i < arguments.length; i++){
                  if (typeof arguments[i] === 'string'){
                      if (typeof arguments[i + 1] === "number")
@@ -97,9 +97,9 @@ var peekaboo = function(options){
             //filter specific results if they need additional maintenences
             if (newOptionName === "titles"){
                 this.clear();
-                this.addTitles.apply(null, state);
+                typeof state === "string" ? this.addTitles(state) : this.addTitles.apply(null, state);
             } else if (newOptionName === "includeOriginal")
-                typeof state === "string" ? this._includeOriginal(state) : this._includeOriginal.apply(null, state);
+                typeof state === "boolean" ? this._includeOriginal(state) : this._includeOriginal.apply(null, state);
             else if (newOptionName === "welcomeBack" || newOptionName === "goodBye")
                 options[newOptionName] = typeof state === "string" ? makeTitle(state) : makeTitle.apply(null, state);
             else if (options.hasOwnProperty(newOptionName))
