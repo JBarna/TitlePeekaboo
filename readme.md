@@ -1,6 +1,7 @@
-# Title Peekaboo
+# [Title Peekaboo](http://jbarna.github.io/TitlePeekaboo/)
 ---
-##### Title Peekaboo lets you grab the fading attention of users by playing a game of peek-a-boo through a webpage's title. 
+##### [Title Peekaboo](http://jbarna.github.io/TitlePeekaboo/) lets you grab the fading attention of users by playing a game of peek-a-boo through a webpage's title. 
+
 ## Why?
 
 ***People suck at paying attention on the Internet***. In fact, this year the human race broke a new record. We now have a [smaller attention span than a goldfish](http://time.com/3858309/attention-spans-goldfish/) (gasp!)
@@ -9,11 +10,15 @@
 **Get their attention back!** When a user leaves your webpage the only content they see is your website title. With Title Peekaboo, you can cleverly bring a user's attention back to your site.
 
 ### Quick Links
+* [Example](#example)
 * [Get Started](#get-started)
 * [Default Options](#default-options)
 * [Options explained in detail](#options-explained)
 * [Methods](#methods)
 * [License](#license)
+
+### Example
+See a demonstration and example TitlePeekaboo at [http://jbarna.github.io/TitlePeekaboo/](http://jbarna.github.io/TitlePeekaboo/)
 
 ### Get Started
 Simply include TitlePeekaboo.js in your HTML and then initalize it:
