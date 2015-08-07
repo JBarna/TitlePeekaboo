@@ -112,7 +112,7 @@ var peekaboo = function(options){
             else if (options.hasOwnProperty(newOptionName))
                 options[newOptionName] = state;
             else
-                console.warn("Unknown option name %s", newOptionName);
+                throw new Error("Unknown option name " + newOptionName);
         };
         
         this._setDefaults = function(){
