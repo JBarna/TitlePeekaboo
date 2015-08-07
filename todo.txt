@@ -1,3 +1,0 @@
-make titles take a number of arguments instead of a string
-
-make a private function that creates a title from either a string or an array

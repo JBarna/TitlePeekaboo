@@ -1,6 +1,5 @@
 $(document).ready(function(){
     
-    var alertShown = false;
     
     //init peekaboo
     peekaboo({
@@ -28,12 +27,19 @@ $(document).ready(function(){
         
         try{
             eval(editors[id].getValue());
-            if (!alertShown)
-            bootbox.alert("To see it work, go ahead and switch tabs!");
-        
-        alertShown = true;
+            swal({
+                title: "Sweet!",
+                text: "Go ahead and switch tabs to see it work",
+                timer: 10000,
+                type: "success"
+            });
+                
         } catch(e){
-            console.log(e);
+            swal({
+                title: "Oops!",
+                "text": ("You had an error: " + e.message),
+                "type": "error"
+            });
         }
         
     });
