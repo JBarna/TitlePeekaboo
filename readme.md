@@ -1,6 +1,6 @@
 # Title Peekaboo
 ---
-##### [Title Peekaboo](http://jbarna.github.io/TitlePeekaboo/) lets you grab the fading attention of users by playing a game of peek-a-boo through a webpage's title. 
+##### [Title Peekaboo](http://jbarna.github.io/TitlePeekaboo/) is a JavaScript library that lets you grab the fading attention of users by playing a game of peek-a-boo through a webpage's title. 
 
 ## Why?
 
